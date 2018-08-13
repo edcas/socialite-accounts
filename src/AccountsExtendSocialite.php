@@ -1,12 +1,13 @@
 <?php
+
 namespace EdCas\SocialiteProviders\Accounts;
 
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
-class AccountsSocialite
+class AccountsExtendSocialite
 {
     /**
-     * Register the provider.
+     * Execute the provider.
      *
      * @param SocialiteWasCalled $socialiteWasCalled
      */
