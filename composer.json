@@ -1,0 +1,21 @@
+{
+  "name": "edcas/socialite-accounts",
+  "description": "Accounts OAuth2 Provider for Laravel Socialite",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Eduard Castro",
+      "email": "eduard.cas07@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.1.3",
+    "socialiteproviders/manager": "^3.3",
+    "ext-json": "^1.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "EdCas\\SocialiteProviders\\Accounts\\": "src/"
+    }
+  }
+}
