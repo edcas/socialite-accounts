@@ -3,20 +3,38 @@
 namespace EdCas\SocialiteProviders\Accounts;
 
 use Illuminate\Http\Request;
-use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\ProviderInterface;
 use Laravel\Socialite\Two\User;
+use SocialiteProviders\Manager\OAuth2\AbstractProvider;
 
 class Provider extends AbstractProvider implements ProviderInterface
 {
-    protected $apiEndpoint;
+    /**
+     * Unique Provider Identifier.
+     */
+    const IDENTIFIER = 'ACCOUNTS';
+
+    /**
+     * ACCOUNTS URL
+     */
+    protected $instanceURI;
+
+    /**
+     * @inheritdoc
+     */
+    protected $scopes = [];
+
+    /**
+     * @inheritdoc
+     */
+    protected $scopeSeparator = ' ';
 
     /**
      * @inheritDoc
      */
     public function __construct(Request $request, string $clientId, string $clientSecret, string $redirectUrl, array $guzzle = [])
     {
-        $this->apiEndpoint = 'http://accounts.io:8000';
+        $this->instanceURI = 'http://accounts.io:8000';
         parent::__construct($request, $clientId, $clientSecret, $redirectUrl, $guzzle);
     }
 
@@ -29,7 +47,7 @@ class Provider extends AbstractProvider implements ProviderInterface
      */
     protected function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase($this->apiEndpoint . '/oauth/authorize', $state);
+        return $this->buildAuthUrlFromBase($this->instanceURI . '/oauth/authorize', $state);
     }
 
     /**
@@ -39,7 +57,7 @@ class Provider extends AbstractProvider implements ProviderInterface
      */
     protected function getTokenUrl()
     {
-        return $this->apiEndpoint . '/oauth/token';
+        return $this->instanceURI . '/oauth/token';
     }
 
     /**
@@ -69,7 +87,7 @@ class Provider extends AbstractProvider implements ProviderInterface
      */
     protected function getUserByToken($token)
     {
-        $userUrl = $this->apiEndpoint . '/api/user';
+        $userUrl = $this->instanceURI . '/api/user';
 
         $response = $this->getHttpClient()->get($userUrl, [
             'headers' => [
@@ -94,5 +112,21 @@ class Provider extends AbstractProvider implements ProviderInterface
             'email' => $user['email'],
             'name' => $user['name'],
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getInstanceUri()
+    {
+        return $this->getConfig('instance_uri', $this->instanceURI);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function additionalConfigKeys()
+    {
+        return ['instance_uri'];
     }
 }
